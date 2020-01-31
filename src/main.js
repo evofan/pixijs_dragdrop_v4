@@ -21,12 +21,11 @@ let isCatDragging = false;
 
 let container = new PIXI.Container();
 container.width = 480;
-container.height = 480;
+container.height = 320;
 container.x = 0;
 container.y = 0;
 container.pivot.x = 0;
 container.pivot.y = 0;
-container.interactive = true;
 container.interactiveChildren = true;
 app.stage.addChild(container);
 
@@ -60,22 +59,13 @@ function onAssetsLoaded(loader, res) {
   cat.buttonMode = true;
   cat.anchor.set(0.5);
   cat.scale.set(1);
-  /*
-	cat.on("tap", (event) => {
-		console.log("onTap cat"); // Desktop(Touch)
-	});
-	cat.on("click", (event) => {
-		console.log("click cat"); // Desktop
-	});
-	*/
-  cat
-    .on("pointerdown", onDragStart)
-    .on("pointerup", onDragEnd)
-    .on("pointerupoutside", onDragEnd)
-    .on("pointermove", onDragMove);
+  cat.on("pointerdown", onDragStart);
+  cat.on("pointerup", onDragEnd);
+  cat.on("pointerupoutside", onDragEnd);
+  cat.on("pointermove", onDragMove);
 
   // Text
-  let text = new PIXI.Text("Drag and Drop Test\n(PixiJS 4.5.5)", {
+  let text = new PIXI.Text("Drag and Drop Test\n(PixiJS 4.8.9)", {
     fontFamily: "Arial",
     fontSize: 30,
     fill: 0xf0fff0,
@@ -112,8 +102,8 @@ let onDragStart = e => {
 /**
  * stop drag
  */
-let onDragEnd = () => {
-  console.log("onDragEnd()");
+let onDragEnd = e => {
+  console.log("onDragEnd()", e);
   cat.tint = 0xffffff;
   isCatDragging = false;
 };
@@ -121,11 +111,14 @@ let onDragEnd = () => {
 /**
  * move drag
  */
-let onDragMove = () => {
-  console.log("onDragMove()");
+let onDragMove = e => {
+  console.log("onDragMove()", e);
   if (isCatDragging) {
-    cat.x = app.renderer.plugins.interaction.mouse.global.x;
-    cat.y = app.renderer.plugins.interaction.mouse.global.y;
+    // cat.x = app.renderer.plugins.interaction.mouse.global.x;
+    // cat.y = app.renderer.plugins.interaction.mouse.global.y;
+    position = e.data.global;
+    cat.x = position.x;
+    cat.y = position.y;
   }
 };
 
